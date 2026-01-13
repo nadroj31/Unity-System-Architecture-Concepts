@@ -20,10 +20,11 @@ flowchart TD
 
 ## Sequence
 
-1. Load PersistentPlayerData_SO
-2. Initialize LPM_RuntimeState from persistent data
-3. Initialize world and gameplay systems
-4. Enable player input and begin gameplay
+1. `LPM.Awake()` checks for existing `PersistentPlayerData_SO` . If another `LPM` or `PersistentPlayerData_SO` instance exists, destroy duplicates to ensure a single persistent source.
+2. If no→ Create new SO instance + `DontDestroyOnLoad`
+3. Load persistent data from SO → write to `LPM_RuntimeState`
+4. Reset all Ephemeral objects
+5. Trigger `GameEvents.OnLoopStart?.Invoke()`
 
 ## Guarantees
 
