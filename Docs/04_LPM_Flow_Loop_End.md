@@ -20,11 +20,11 @@ flowchart TD
 
 ## Sequence
 
-1. Freeze gameplay systems
-2. Validate runtime state
-3. Commit approved changes to persistent data
-4. Discard all ephemeral data
-5. Reload the scene
+1. Sync changes from `RuntimeState` → back to SO
+2. Intergrate `MinigameResult_SO`
+3. The `isLoopResetting` flag ensures that other systems stop modifying runtime data during scene reload.
+4. Clear `RuntimeState` (prepare for next loop)
+5. `SceneManager.LoadScene()` → Loop Start
 
 ## Guarantees
 
