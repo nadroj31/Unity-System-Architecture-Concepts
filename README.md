@@ -6,9 +6,9 @@
 
 This repository presents a design-oriented technical blueprint for the **Loop Persistence Manager (LPM)** system created for *Veritas*, a time-loop–based game concept.
 
-The core problem addressed is how to handle **scene reloads on loop reset** while preserving selected player progress (persistent data) and resetting all world and runtime state (ephemeral data).
+The core problem addressed is how to support **full scene reloads on loop reset** while selectively preserving player progression and ensuring all loop-specific state is safely reset.
 
-The focus of this repository is system architecture, data segregation, and loop lifecycle management rather than concrete implementation code.
+This repository focuses on **system architecture, data ownership, and lifecycle control**, rather than concrete implementation code.
 
 ## Challenge Context
 
@@ -16,41 +16,52 @@ In *Veritas*, gameplay operates on a repeating daily time loop.
 
 - When the player dies or the day ends, the scene reloads.
 - Certain progress must persist across loops, such as items stored in a persistent chest or unlocked Fate Nodes.
-- All world state resets to its initial condition.
+- All world and gameplay states must reset to a clean baseline.
 
-The design goal is to clearly define what persists, what resets, and how the system enforces that separation in a clean and maintainable way.
+The design goal is to define clearly **what persists**, **what resets**, and **how the system enforces this separation** in a scalable and maintainable manner.
 
-## Design Goals
+## How to Read This Repository
 
-- Explicit separation between persistent, ephemeral, and runtime data
-- No direct mutation of persistent data during gameplay
-- Clear responsibilities at loop start and loop end
-- Modular integration of independent minigames
-- Scalability for future systems and additional persistence rules
+This repository is structured to allow both quick review and deep inspection.
 
-## Core Concepts
+### Recommended Reading Order
 
-- **Persistent Data**  
-  Long-term player progression stored in ScriptableObjects
+1. **Data Segregation Rules**  
+   `Docs/01_Data_Segregation.md`  
+   Defines ownership and lifecycle rules for all data categories.
 
-- **Ephemeral Data**  
-  Loop-specific world and gameplay state that is reset on each loop
+2. **Persistent Data Structure**  
+   `Docs/02_PersistentPlayerData_SO_Structure.md`  
+   Details the schema and responsibilities of persistent player data.
 
-- **Runtime State**  
-  A controlled runtime copy used during gameplay to prevent unsafe modification of persistent data
+3. **Loop Lifecycle Flows**  
+   - `Docs/03_LPM_Flow_Loop_Start.md`  
+   - `Docs/04_LPM_Flow_Loop_End.md`  
+   Visual and step-by-step breakdown of loop initialization and reset.
 
-## Documentation
+4. **Minigame Integration**  
+   `Docs/05_Minigame_Integration.md`  
+   Explains how minigames are loaded, isolated, and how permanent results are applied.
 
-Detailed design explanations can be found in the `Docs` directory:
+5. **Overall System Overview**  
+   `Docs/06_Overall_UML_Overview.md`  
+   High-level UML diagram summarizing component relationships.
 
-- `Challenge_Response.md` – Explicit response to the original five-point technical challenge  
-- `DataSegregation.md` – Persistent vs ephemeral vs runtime data model  
-- `LoopLifecycle.md` – Loop start and loop end flow breakdown  
-- `MinigameIntegration.md` – Modular minigame loading and result handling  
+For reviewers interested in the original technical challenge requirements and their explicit responses, see:  
+`Docs/Challenge_Response.md`.
+
+## Design Principles
+
+- Persistent data is never mutated during active gameplay
+- Runtime state acts as a controlled buffer for all gameplay changes
+- Ephemeral state is fully discarded on each loop reset
+- Loop lifecycle responsibilities are centralized and explicit
+- Independent systems communicate through well-defined boundaries
 
 ## Disclaimer
 
-This repository represents a conceptual system design and does not contain production-ready code or a playable Unity project.
+This repository represents a **conceptual system design**.  
+It does not contain production-ready code or a playable Unity project.
 
 ## Author
 
